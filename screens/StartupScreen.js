@@ -1,20 +1,58 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     View,
     StyleSheet,
-    Text
+    Text,
+    FlatList,
+    Button
 } from 'react-native';
-
-
+import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import Colors from '../constants/Colors';
+
 import HeaderButton from '../components/UI/HeaderButton';
+import ProductItem from '../components/shop/ProductItem';
+import * as categoriesActions from '../store/actions/categories'; 
+
 
 const StartupScreen = props => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [error, setError] = useState();
+  const categories = useSelector(state => state.categories.availableCategories);
+  const dispatch = useDispatch();
+
+
+const loadCategories = () => {
+    setIsRefreshing(true);
+    console.log("se refreseaza ");
+    setIsRefreshing(false);
+}
+
+  useEffect(() => {
+    dispatch(categoriesActions.fetchCategories());
+  }, [dispatch]);
 
     return ( 
-    <View style={styles.screen}>
-        <Text> Aici vin categoriile </Text>
-    </View>
+      <FlatList
+       onRefresh={loadCategories}
+       refreshing={isRefreshing}  
+        data={categories}
+        keyExtractor={item => item.id}
+        renderItem={itemData => (
+          <ProductItem
+          id={itemData.item.id}
+          image={itemData.item.picturFullLink}
+          name={itemData.item.name}
+          >
+          <Button 
+            color={Colors.primary}
+            title={itemData.item.name}
+          />
+          </ProductItem>
+      )}
+      >
+      </FlatList>
     );
 };
 

@@ -6,12 +6,14 @@ import ReduxThunk from 'redux-thunk';
 import { useFonts } from 'expo-font'; 
 
 import categoriesReducer from './store/reducers/categories';
+import productsReducer from './store/reducers/products';
 
 import AppNavigator from './navigation/AppNavigator';
 
 
 const rootReducer = combineReducers({
-  categories: categoriesReducer
+  categories: categoriesReducer,
+  products: productsReducer
 });
 
 //const store = createStore(rootReducer, applyMiddleware(ReduxThunk)); //composeWithDevTools()

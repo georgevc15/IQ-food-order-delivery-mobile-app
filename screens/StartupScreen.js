@@ -3,8 +3,10 @@ import {
     View,
     StyleSheet,
     Text,
+    Button,
     FlatList,
-    Button
+    ActivityIndicator,
+
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -23,15 +25,77 @@ const StartupScreen = props => {
   const dispatch = useDispatch();
 
 
-const loadCategories = () => {
-    setIsRefreshing(true);
-    console.log("se refreseaza ");
-    setIsRefreshing(false);
-}
+const loadCategories = useCallback(async () => {
+  setError(null);  
+  setIsRefreshing(true);
+  try {
+    await dispatch(categoriesActions.fetchCategories());
+  } catch (err) {
+    setError(err.message)
+  }
+  setIsRefreshing(false);
+}, [dispatch, setIsLoading, setError]);
 
   useEffect(() => {
     dispatch(categoriesActions.fetchCategories());
   }, [dispatch]);
+
+
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener(
+      'focus',
+      loadCategories
+    );
+
+      return () => {
+        unsubscribe();
+      };
+  },[loadCategories])
+
+  useEffect(() => {
+    setIsLoading(true);
+    loadCategories().then(() => {
+      setIsLoading(false);
+    });
+  }, [dispatch, loadCategories]);
+
+const selectItemHandler = (id, name, tip) => {
+     if(tip == 1) {
+      props.navigation.navigate('DailyMenuOverview', {
+        categoryName: name
+    });
+     } else {
+      props.navigation.navigate('ProductsOverview', {
+        categoryId: id,
+        categoryName: name
+    });
+     }
+
+};
+
+  if (error) {
+    console.log(error);
+    return (<View style={styles.centered}>
+      <Text>An error occurred!</Text>
+      <Button 
+        title="Try again" 
+        onPress={loadCategories} 
+        color={Colors.primary}/>
+  </View>)
+  }
+  
+    if(isLoading) {
+      return (<View style={styles.centered}>
+        <ActivityIndicator size='large' color={Colors.primary}/>
+      </View>)
+    }
+  
+    if (!isLoading && categories.length === 0) {
+      return (<View style={styles.centered}>
+          <Text>Nu exista categorii</Text>
+      </View>)
+    }
+
 
     return ( 
       <FlatList
@@ -44,10 +108,24 @@ const loadCategories = () => {
           id={itemData.item.id}
           image={itemData.item.picturFullLink}
           name={itemData.item.name}
+          onSelect={() => {
+            selectItemHandler(
+              itemData.item.id,
+              itemData.item.name,
+              itemData.item.name === "Meniul zilei" ? 1 : 0
+              )
+          }}
           >
           <Button 
             color={Colors.primary}
             title={itemData.item.name}
+            onPress={() => {
+              selectItemHandler(
+                itemData.item.id,
+                itemData.item.name,
+                itemData.item.name === "Meniul zilei" ? 1 : 0
+                )
+            }}
           />
           </ProductItem>
       )}
@@ -59,7 +137,7 @@ const loadCategories = () => {
 
 export const screenOptions = navData => {
     return {
-      headerTitle: 'Categorii',
+      headerTitle: 'Bine ati venit',
       headerLeft: () =>  ( 
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
           <Item

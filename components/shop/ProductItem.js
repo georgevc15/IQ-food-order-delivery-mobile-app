@@ -14,7 +14,7 @@ const ProductItem = props => {
  return (
     <Card style={styles.product}>
      <View styles={styles.touchable}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={props.onSelect}>
         <View>
             <View style={styles.imageContainer}>
                 <Image 

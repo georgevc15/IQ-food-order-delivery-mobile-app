@@ -13,7 +13,7 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import Colors from '../constants/Colors';
 
 import HeaderButton from '../components/UI/HeaderButton';
-import ProductItem from '../components/shop/ProductItem';
+import CategoryItem from '../components/shop/CategoryItem';
 import * as categoriesActions from '../store/actions/categories'; 
 
 
@@ -104,7 +104,7 @@ const selectItemHandler = (id, name, tip) => {
         data={categories}
         keyExtractor={item => item.id}
         renderItem={itemData => (
-          <ProductItem
+          <CategoryItem
           id={itemData.item.id}
           image={itemData.item.picturFullLink}
           name={itemData.item.name}
@@ -127,7 +127,7 @@ const selectItemHandler = (id, name, tip) => {
                 )
             }}
           />
-          </ProductItem>
+          </CategoryItem>
       )}
       >
       </FlatList>

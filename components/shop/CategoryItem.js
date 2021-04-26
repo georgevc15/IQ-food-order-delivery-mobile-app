@@ -10,11 +10,11 @@ import {
 import Card from '../../components/UI/Card';
 
 
-const ProductItem = props => {
+const CategoryItem = props => {
  return (
     <Card style={styles.product}>
      <View styles={styles.touchable}>
-
+      <TouchableOpacity onPress={props.onSelect}>
         <View>
             <View style={styles.imageContainer}>
                 <Image 
@@ -30,7 +30,7 @@ const ProductItem = props => {
            </View>      
         </View>
 
-     
+      </TouchableOpacity>
       </View>
     </Card>  
     );
@@ -38,7 +38,7 @@ const ProductItem = props => {
 
 const styles = StyleSheet.create({
     product: {
-      height: 415,
+      height: 250,
       margin: 20
     },
     touchable: {
@@ -58,8 +58,11 @@ const styles = StyleSheet.create({
         height: '100%'
       },
       actions: {
-        flex: 1
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 15
       }
   });
 
-  export default ProductItem;
+  export default CategoryItem;

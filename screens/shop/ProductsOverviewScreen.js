@@ -6,11 +6,10 @@ import {
     Button,
     FlatList,
     ActivityIndicator,
-
+    TextInput
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import Colors from '../../constants/Colors';
-
 
 import ProductItem from '../../components/shop/ProductItem';
 import * as productsActions from '../../store/actions/products'; 
@@ -20,17 +19,19 @@ const ProductsOverviewScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
-  
-  const products = useSelector(state => state.products.availableProducts);
-  
-  const dispatch = useDispatch();
 
+  const products = useSelector(state => state.products.availableProducts);
+
+
+
+const dispatch = useDispatch();
 
 const loadProducts = useCallback(async () => {
   setError(null);  
   setIsRefreshing(true);
   try {
-    await dispatch(productsActions.fetchProducts());
+    const categoryId = props.route.params.categoryId; 
+    await dispatch(productsActions.fetchProducts(categoryId));
   } catch (err) {
     setError(err.message)
   }
@@ -38,7 +39,8 @@ const loadProducts = useCallback(async () => {
 }, [dispatch, setIsLoading, setError]);
 
   useEffect(() => {
-    dispatch(productsActions.fetchProducts());
+    const categoryId = props.route.params.categoryId;
+    dispatch(productsActions.fetchProducts(categoryId));
   }, [dispatch]);
 
 
@@ -59,6 +61,7 @@ const loadProducts = useCallback(async () => {
       setIsLoading(false);
     });
   }, [dispatch, loadProducts]);
+
 
 
   if (error) {
@@ -83,12 +86,11 @@ const loadProducts = useCallback(async () => {
           <Text>Nu exista produse</Text>
       </View>)
     }
-
-
+  
     return ( 
       <FlatList
-       onRefresh={loadProducts}
-       refreshing={isRefreshing}  
+      onRefresh={loadProducts}
+      refreshing={isRefreshing}  
         data={products}
         keyExtractor={item => item.id}
         renderItem={itemData => (
@@ -97,11 +99,41 @@ const loadProducts = useCallback(async () => {
           image={itemData.item.picturFullLink}
           name={itemData.item.name}
           >
-          <Button 
+
+      <View style={styles.titleWrapper}>
+            <Text style={styles.title}>{itemData.item.name}</Text>
+          </View>
+         
+         <View style={styles.wrapperInfo}>
+            <View style={styles.priceWrapper}>
+              <Text style={styles.price}>{itemData.item.price} Lei</Text>
+            </View>
+ 
+
+          <View style={styles.quantityWrapper}>
+            
+
+              <View style={styles.callOut}> 
+                <TextInput
+                  style={styles.input}
+                  placeholder="1"
+                  keyboardType="numeric"
+                  id={itemData.item.id}
+                />
+              </View> 
+
+
+            </View>
+          </View>                  
+
+          <View styles={styles.wrapperAddToCart}>
+          <Button  styles={styles.addToCart}
             color={Colors.primary}
-            title={itemData.item.name}
+            title="Adauga in cos"
           />
-          </ProductItem>
+          </View>
+
+        </ProductItem>
       )}
       >
       </FlatList>
@@ -116,10 +148,62 @@ export const screenOptions = navData => {
 };
 
 const styles = StyleSheet.create({
-  screen: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center'
+  titleWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 20
+  }, 
+  wrapperInfo: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    justifyContent: 'space-evenly',
+    paddingTop: 15,
+    paddingBottom: 15
+  },
+  priceWrapper: {
+    flex: 1
+  },
+  price: {
+    paddingLeft: 10,
+    color: Colors.primary
+  },
+  quantityWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    justifyContent: 'space-between'
+  },
+  callOut: {
+    padding: 2,
+    flexBasis: '30%'
+  },
+  minusSign: {
+    flex: 1
+  },
+  plusSign: {
+    flex: 3
+  },
+  quantity: {
+    flex: 2,
+    paddingRight: 10,
+  },
+  input: {
+    height: 30,
+    width: '40%',
+    margin: 2,
+    borderWidth: 1,
+    textAlign: 'center',
+    color: "#000"
+  },
+  wrapperAddToCart: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 40
+  },
+  addToCart: {
+    marginBottom: 40
   }
 });
 

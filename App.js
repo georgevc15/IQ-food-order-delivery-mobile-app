@@ -7,13 +7,15 @@ import { useFonts } from 'expo-font';
 
 import categoriesReducer from './store/reducers/categories';
 import productsReducer from './store/reducers/products';
+import cartReducer from './store/reducers/cart';
 
 import AppNavigator from './navigation/AppNavigator';
 
 
 const rootReducer = combineReducers({
   categories: categoriesReducer,
-  products: productsReducer
+  products: productsReducer,
+  cart: cartReducer
 });
 
 //const store = createStore(rootReducer, applyMiddleware(ReduxThunk)); //composeWithDevTools()

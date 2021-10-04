@@ -6,32 +6,61 @@ import {
     Button,
     FlatList,
     ActivityIndicator,
-    TextInput
+    TouchableOpacity
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import Colors from '../../constants/Colors';
 
 import ProductItem from '../../components/shop/ProductItem';
+import * as carActions from '../../store/actions/cart';
 import * as productsActions from '../../store/actions/products'; 
-
 
 const ProductsOverviewScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
+   
+  const [currentQty, setcurrentQty]= useState([]);
 
+
+ const increaseQtyHandler =  (index, productId) => {
+      let qty = currentQty[index];
+        
+      if(qty !== undefined) {
+        currentQty[index] =  currentQty[index] + 1;
+        } else {
+         currentQty[index] = 2;
+        }        
+        setcurrentQty({...currentQty});
+        dispatch(carActions.addQuantity(productId, currentQty[index]));
+    }
+
+
+const decreaseQtyHandler = (index, productId) =>  {
+
+    if (currentQty[index] > 1) {
+      currentQty[index] =  currentQty[index] - 1;
+    
+      setcurrentQty({...currentQty});
+      dispatch(carActions.addQuantity(productId, currentQty[index])); 
+    }
+}
+
+  const cars = useSelector(state => state.cart.cars);
   const products = useSelector(state => state.products.availableProducts);
-
-
+  const quantities = useSelector(state => state.cart.quantities);
+  
 
 const dispatch = useDispatch();
 
 const loadProducts = useCallback(async () => {
   setError(null);  
   setIsRefreshing(true);
+
   try {
     const categoryId = props.route.params.categoryId; 
     await dispatch(productsActions.fetchProducts(categoryId));
+
   } catch (err) {
     setError(err.message)
   }
@@ -41,6 +70,7 @@ const loadProducts = useCallback(async () => {
   useEffect(() => {
     const categoryId = props.route.params.categoryId;
     dispatch(productsActions.fetchProducts(categoryId));
+    
   }, [dispatch]);
 
 
@@ -55,12 +85,33 @@ const loadProducts = useCallback(async () => {
       };
   },[loadProducts])
 
+
   useEffect(() => {
     setIsLoading(true);
     loadProducts().then(() => {
       setIsLoading(false);
     });
   }, [dispatch, loadProducts]);
+
+  
+  list = (id) => {
+    return cars.map((element) => {
+      if(id == element.id) {
+        return (
+          <View key={element.id} style={{margin: 10}}>
+            <Text>We have a match {element.id} !!!</Text>
+          </View>
+        );
+      } else {
+        return (
+          <View key={element.id} style={{margin: 10}}>
+            <Text>Ohh no we do not have amatch!!!</Text>
+          </View>
+        );      
+      }
+
+    });
+  };
 
 
 
@@ -88,58 +139,74 @@ const loadProducts = useCallback(async () => {
     }
   
     return ( 
+      
       <FlatList
       onRefresh={loadProducts}
       refreshing={isRefreshing}  
         data={products}
         keyExtractor={item => item.id}
-        renderItem={itemData => (
+        renderItem={({ item, index }) => (
           <ProductItem
-          id={itemData.item.id}
-          image={itemData.item.picturFullLink}
-          name={itemData.item.name}
+          id={item.id}
+          image={item.picturFullLink}
+          name={item.name}
           >
-
       <View style={styles.titleWrapper}>
-            <Text style={styles.title}>{itemData.item.name}</Text>
+            <Text style={styles.title}>{item.name}</Text>
           </View>
          
          <View style={styles.wrapperInfo}>
             <View style={styles.priceWrapper}>
-              <Text style={styles.price}>{itemData.item.price} Lei</Text>
+              <Text style={styles.price}>{item.price} Lei</Text>
             </View>
  
-
           <View style={styles.quantityWrapper}>
-            
-
               <View style={styles.callOut}> 
-                <TextInput
-                  style={styles.input}
-                  placeholder="1"
-                  keyboardType="numeric"
-                  id={itemData.item.id}
-                />
-              </View> 
+                <View style={styles.qtyBtnDecrease}>
+                <Button 
+                    title="-" 
+                    onPress={() => decreaseQtyHandler(index,item.id)}
+                    color={Colors.secondary}
+                    style={styles.qtyBty} >
+                    </Button>
+                </View>
+ 
 
 
+                <View style={styles.qtyTxt}>
+                      {currentQty[index] ? <Text>{currentQty[index]}</Text>: <Text>1</Text>}
+                </View>
+                <View style={styles.qtyBtnIncrease}>
+                  <Button 
+                  title="+" 
+                  onPress={() => increaseQtyHandler(index,item.id)}
+                  color={Colors.secondary}
+                  style={styles.qtyBty}
+                  ></Button>
+                </View>
             </View>
-          </View>                  
+          </View>
 
-          <View styles={styles.wrapperAddToCart}>
+        </View>                   
+         
+     <TouchableOpacity> 
+      <View styles={styles.wrapperAddToCart}>
           <Button  styles={styles.addToCart}
             color={Colors.primary}
             title="Adauga in cos"
+            onPress={() => {
+              data => setTextInputHolder(data)
+              dispatch(carActions.addToCart(item.id));
+            }}
           />
           </View>
-
+        </TouchableOpacity>
         </ProductItem>
       )}
       >
       </FlatList>
     );
 };
-
 
 export const screenOptions = navData => {
   return {
@@ -176,8 +243,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   callOut: {
+    display: 'flex',
+    flexDirection: 'row',
     padding: 2,
-    flexBasis: '30%'
+    flexBasis: '30%',
+    justifyContent: 'space-between'
   },
   minusSign: {
     flex: 1
@@ -200,11 +270,29 @@ const styles = StyleSheet.create({
   wrapperAddToCart: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 40
+    marginBottom: 40,
+    marginTop: 40
   },
   addToCart: {
-    marginBottom: 40
+    marginBottom: 40,
+    height: 50,
+    paddingBottom: 20
+  },
+  qtyBtnIncrease: {
+    flexBasis: '40%',
+    marginRight: 10
+  },
+  qtyBtnDecrease: {
+    flexBasis: '40%',
+  },
+  qtyTxt: {
+    flexBasis: '20%',
+    marginTop: 3,
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   }
+
 });
 
 export default ProductsOverviewScreen;

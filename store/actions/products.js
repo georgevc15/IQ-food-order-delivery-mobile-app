@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Product  from "../../models/product";
 
 export const SHOW_PRODUCTS = 'SHOW_PRODUCTS';
@@ -41,6 +42,25 @@ export const fetchProducts = categoryId => {
         } catch (err) {
              //optional send to custom analytics server
              throw err;  
-        }    
+        }
+   
     };
+};
+
+
+function makeid(length) {
+    var result           = [];
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result.push(characters.charAt(Math.floor(Math.random() * charactersLength)));
+   }
+   return result.join('');
+}
+
+const saveSessionIdToStorage = (sessionId) => {
+    AsyncStorage.setItem(
+      'cartSessionId',
+      sessionId
+    );
 };

@@ -1,5 +1,6 @@
 import { SHOW_PRODUCTS } from '../actions/products';
 
+
 const initialState = {
     availableProducts: []
 }

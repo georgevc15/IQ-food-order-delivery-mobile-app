@@ -9,7 +9,6 @@ import {
 
 import Card from '../../components/UI/Card';
 
-
 const ProductItem = props => {
  return (
     <Card style={styles.product}>
@@ -30,7 +29,6 @@ const ProductItem = props => {
            </View>      
         </View>
 
-     
       </View>
     </Card>  
     );

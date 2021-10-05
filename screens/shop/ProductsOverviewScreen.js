@@ -171,8 +171,6 @@ const loadProducts = useCallback(async () => {
                     </Button>
                 </View>
  
-
-
                 <View style={styles.qtyTxt}>
                       {currentQty[index] ? <Text>{currentQty[index]}</Text>: <Text>1</Text>}
                 </View>

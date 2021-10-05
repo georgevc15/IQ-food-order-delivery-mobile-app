@@ -4,119 +4,160 @@ import RadioGroup from 'react-native-radio-buttons-group';
 import { View, ScrollView, Text, StyleSheet, Button } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
-import HeaderButton from '../../components/UI/HeaderButton';
-
+import Card from '../../components/UI/Card';
 
 const DailyMenuOverviewScreen = () => {
 
-  const radioButtonsData = [{
-    id: '1',
-    label: 'Option 1',
-    value: 'valoare1'
+
+/*
+soup
+mainCourse
+secondCourse
+salads
+*/
+
+  const soupData = [{
+      id: '1',
+      label: 'Option 1',
+      value: 'valoare1',
+      type: 'soup'
     },
     {
-        id: '2',
-        label: 'Option 2',
-        value: 'valoare2'
+      id: '2',
+      label: 'Option 2',
+      value: 'valoare2',
+      type: 'soup'
     }];
 
-    const radioButtonsData2 = [{
-      id: '1',
+    const mainCourseData = [{
+      id: '3',
       label: 'Option 3',
-      value: 'valoare3'
+      value: 'valoare3',
+      type: 'mainCourse'
       },
       {
-          id: '2',
-          label: 'Option 4',
-          value: 'valoare4'
+       id: '4',
+       label: 'Option 4',
+       value: 'valoare4',
+       type: 'mainCourse'
       }];
 
+    const secondCourseData = [{
+      id: '5',
+      label: 'Option 5',
+      value: 'valoare 5'
+      },
+      {
+       id: '6',
+       label: 'Option 4',
+       value: 'valoare 4'
+      }];
+
+      const saladsData = [{
+        id: '7',
+        label: 'Option 5',
+        value: 'valoare 5'
+        },
+        {
+        id: '8',
+        label: 'Option 6',
+        value: 'valoare 6'
+        },
+        {
+        id: '9',
+        label: 'Option 9',
+        value: 'valoare 9'
+        },
+        {
+        id: '10',
+        label: 'Option 10',
+        value: 'valoare 10'
+        }
+      ];
     
 
-const [radioButtons, setRadioButtons] = useState(radioButtonsData);
+const [soup, setSoup] = useState(soupData);
+const [mainCourse, setMainCourse] = useState(mainCourseData);
+const [secondCourse, setSecondCourse] = useState(secondCourseData);
+const [salads, setSalads] = useState(saladsData);
 
-const [radioButtons2, setRadioButtons2] = useState(radioButtonsData2);
+function onPressChoseSoup(radioButtonsArray) {
+    setSoup(radioButtonsArray);
+    console.log(soup);
 
-  function onPressRadioButton(radioButtonsArray) {
-    //console.log(radioButtonsArray);
-    //const menuId = radioButtonsArray[id];
-    //console.log(menuId);
-    setRadioButtons(radioButtonsArray);
-    console.log(radioButtons);
+        for (var key in soup) {
+          if (soup.hasOwnProperty(key)) {
+            if(soup[key]['selected'] == true) {
+              console.log(key + " -> " + soup[key]['label']);
+            }
+          }
+        }
+    }
 
-      for (key in radioButtons) {
-          console.log(radioButtons['value']);
+    function onPressMainCourse(radioButtonsArray) {
+      setMainCourse(radioButtonsArray);
+      console.log(mainCourse);
+  
+          for (var key in mainCourse) {
+            if (mainCourse.hasOwnProperty(key)) {
+                console.log(key + " -> " + mainCourse[key]['label']);
+            }
+          }
       }
 
-  }
+      function onPressSecondCourse(radioButtonsArray) {
+        setSecondCourse(radioButtonsArray);
+        console.log(secondCourse);
+    
+            for (var key in secondCourse) {
+              if (secondCourse.hasOwnProperty(key)) {
+                  console.log(key + " -> " + secondCourse[key]['label']);
+              }
+            }
+        }
 
-
-  function onPressRadioButton2(radioButtonsArray) {
-    //console.log(radioButtonsArray);
-    //const menuId = radioButtonsArray[id];
-    //console.log(menuId);
-    //setRadioButtons2(radioButtonsArray);
-  }
-
+        function onPressSalads(radioButtonsArray) {
+          setSalads(radioButtonsArray);
+          console.log(salads);
+      
+              for (var key in salads) {
+                if (salads.hasOwnProperty(key)) {
+                    console.log(key + " -> " + salads[key]['label']);
+                }
+              }
+          }
 
     return (
        <ScrollView>
-         <View styles={styles.infoSchedule}>
-           <Text styles={styles.infoScheduleText}>Meniul zilei - Se poate comanda zilnic intre orele 00:00:00 | 13:00:00</Text>
+         <Card style={styles.dailyCard}> 
+         <View>
+           <Text styles={styles.title}> Meniul zilei - Se poate comanda zilnic intre orele 00:00:00 | 13:00:00</Text>
            </View>
         
         <View style={styles.dailyOptions}>
           <Text> Ciorbe / Supe</Text>
+          <RadioGroup
+            radioButtons={soup} 
+            onPress={onPressChoseSoup} 
+        />
+          <Text> Fel principal </Text>
           <RadioGroup 
-            radioButtons={radioButtons} 
-            onPress={onPressRadioButton} 
+            radioButtons={mainCourse} 
+            onPress={onPressMainCourse}
+        />
+          <Text> Garnituri </Text>
+          <RadioGroup 
+            radioButtons={secondCourse} 
+            onPress={onPressSecondCourse}
+        />
+          <Text> Salate </Text>
+          <RadioGroup 
+            radioButtons={salads} 
+            onPress={onPressSalads}
         />
 
-          <RadioGroup 
-            radioButtons={radioButtons2} 
-            onPress={onPressRadioButton2} 
-        />
-        </View>
-
-        <View style={styles.dailyOptions}>
-          <Text> Fel principal</Text>
-          <RadioGroup 
-            radioButtons={radioButtons} 
-            onPress={onPressRadioButton} 
-        />
-
-          <RadioGroup 
-            radioButtons={radioButtons2} 
-            onPress={onPressRadioButton2} 
-        />
-        </View>
-
-        <View style={styles.dailyOptions}>
-          <Text> Garnituri</Text>
-          <RadioGroup 
-            radioButtons={radioButtons} 
-            onPress={onPressRadioButton} 
-        />
-
-          <RadioGroup 
-            radioButtons={radioButtons2} 
-            onPress={onPressRadioButton2} 
-        />
-        </View>        
-
-        <View style={styles.dailyOptions}>
-          <Text> Salate</Text>
-          <RadioGroup 
-            radioButtons={radioButtons} 
-            onPress={onPressRadioButton} 
-        />
-
-          <RadioGroup 
-            radioButtons={radioButtons2} 
-            onPress={onPressRadioButton2} 
-        />
         </View> 
-
+      </Card>   
       </ScrollView>  
     );
 };
@@ -130,15 +171,15 @@ export const screenOptions = navData => {
       
   
 const styles = StyleSheet.create({
-  infoSchedule: {
-    marginTop: 30
-  },
-  infoScheduleText: {
-    fontSize: 40
+  dailyCard: {
+    margin:20
   },
   dailyOptions: {
     justifyContent: 'flex-start',
     alignItems: 'flex-start'
+  },
+  title: {
+    fontSize: 20
   }
 });
     

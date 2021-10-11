@@ -16,11 +16,10 @@ export const fetchProducts = categoryId => {
             }
 
             const resData = await response.json();
-            //console.log(resData);
+
             const loadedProducts = [];
 
             for (const key in resData) {
-                //console.log(key);
                 loadedProducts.push(
                     new Product(
                         key,
@@ -34,7 +33,7 @@ export const fetchProducts = categoryId => {
                     )
                 );
             }
-            //console.log(loadedProducts);
+
           dispatch({
             type: SHOW_PRODUCTS,
             products: loadedProducts 

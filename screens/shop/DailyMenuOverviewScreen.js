@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import RadioGroup from 'react-native-radio-buttons-group';
 
-import { View, ScrollView, Text, StyleSheet, Button } from 'react-native';
-import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import { 
+  View, 
+  ScrollView, 
+  Text, 
+  StyleSheet, 
+  Button,
+  TouchableOpacity 
+} from 'react-native';
+import Colors from '../../constants/Colors';
 
 import Card from '../../components/UI/Card';
 
 const DailyMenuOverviewScreen = () => {
 
-
-/*
-soup
-mainCourse
-secondCourse
-salads
-*/
 
   const soupData = [{
       id: '1',
@@ -157,6 +157,20 @@ function onPressChoseSoup(radioButtonsArray) {
         />
 
         </View> 
+      
+        <TouchableOpacity> 
+          <View styles={styles.wrapperAddToCart}>
+            <Button  styles={styles.addToCart}
+              color={Colors.primary}
+              title="Adauga in cos"
+              onPress={() => {
+                data => setTextInputHolder(data)
+                dispatch(carActions.addToCart(item.id));
+              }}
+            />
+            </View>
+        </TouchableOpacity>     
+      
       </Card>   
       </ScrollView>  
     );
@@ -180,7 +194,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20
-  }
+  },
+  wrapperAddToCart: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 40,
+    marginTop: 40
+  },
+  addToCart: {
+    marginBottom: 40,
+    height: 50,
+    paddingBottom: 20
+  }  
 });
     
 export default DailyMenuOverviewScreen;

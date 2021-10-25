@@ -130,17 +130,17 @@ function onPressChoseSoup(radioButtonsArray) {
     return (
        <ScrollView>
          <Card style={styles.dailyCard}> 
-         <View>
+         <View style={styles.titleWrapper}>
            <Text styles={styles.title}> Meniul zilei - Se poate comanda zilnic intre orele 00:00:00 | 13:00:00</Text>
            </View>
         
         <View style={styles.dailyOptions}>
-          <Text> Ciorbe / Supe</Text>
+          <Text styles={styles.courseTitle}> Ciorbe / Supe</Text>
           <RadioGroup
             radioButtons={soup} 
             onPress={onPressChoseSoup} 
         />
-          <Text> Fel principal </Text>
+          <Text style={{ fontSize: 18 }}> Fel principal </Text>
           <RadioGroup 
             radioButtons={mainCourse} 
             onPress={onPressMainCourse}
@@ -190,10 +190,21 @@ const styles = StyleSheet.create({
   },
   dailyOptions: {
     justifyContent: 'flex-start',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
+    marginLeft: 20,
+    marginBottom: 20
+  },
+  titleWrapper: {
+    margin: 20,
+    textAlign: 'center'
   },
   title: {
-    fontSize: 20
+    fontSize: 20,
+    fontWeight: "bold"
+  },
+  courseTitle: {
+    fontSize: 20,
+    fontWeight: "bold"
   },
   wrapperAddToCart: {
     justifyContent: 'center',

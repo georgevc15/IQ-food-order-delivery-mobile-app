@@ -1,4 +1,5 @@
-class DailyMenu {
+
+class DailyMenuInfo {
     constructor(id, name, price, orderStart, orderStop, availableDays) {
         this.id = id;
         this.name = name;
@@ -9,4 +10,4 @@ class DailyMenu {
     }
 }
 
-export default DailyMenu;
+export default DailyMenuInfo;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import RadioGroup from 'react-native-radio-buttons-group';
 
 import { 
@@ -9,11 +9,27 @@ import {
   Button,
   TouchableOpacity 
 } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import Colors from '../../constants/Colors';
 
 import Card from '../../components/UI/Card';
 
+import * as dailyMenuInfoActions from '../../store/actions/dailymenuinfo';
+
 const DailyMenuOverviewScreen = () => {
+
+
+const dispatch = useDispatch();
+
+useEffect(() => {
+    dispatch(dailyMenuInfoActions.fetchDailyMenuInfo());
+}, [dispatch]);
+
+
+const dailyMenuInfo = useSelector(state => state.dailyMenuInfo.availableDailyMenuInfo);
+
+const orderStart = dailyMenuInfo.map(x=>x.orderStart); 
+const orderStop = dailyMenuInfo.map(x=>x.orderStop);
 
 
   const soupData = [{
@@ -131,15 +147,18 @@ function onPressChoseSoup(radioButtonsArray) {
        <ScrollView>
          <Card style={styles.dailyCard}> 
          <View style={styles.titleWrapper}>
-           <Text styles={styles.title}> Meniul zilei - Se poate comanda zilnic intre orele 00:00:00 | 13:00:00</Text>
+           <Text styles={styles.title}> Meniul zilei se poate comanda zilnic intre orele {orderStart} | {orderStop}  </Text>
            </View>
         
         <View style={styles.dailyOptions}>
           <Text styles={styles.courseTitle}> Ciorbe / Supe</Text>
+  
           <RadioGroup
             radioButtons={soup} 
             onPress={onPressChoseSoup} 
-        />
+        /> 
+         
+
           <Text style={{ fontSize: 18 }}> Fel principal </Text>
           <RadioGroup 
             radioButtons={mainCourse} 

@@ -4,8 +4,7 @@ export const SHOW_CATEGORIES = 'SHOW_CATEGORIES';
 
 export const fetchCategories = () => {
     return async (dispatch, getState) => {
-        try {
-            //https://react-native-server-3e257-default-rtdb.firebaseio.com/product.json                
+        try {             
             const response = await fetch(
                 `https://www.alibabafood.ro/api/categories.php`
             );
@@ -24,7 +23,7 @@ export const fetchCategories = () => {
                         key,
                         resData[key].name,
                         resData[key].picturFullLink,
-                        resData[key].deliveryTime,
+                        resData[key].deliveryTime
                     )
                 );
             }
@@ -34,7 +33,7 @@ export const fetchCategories = () => {
             categories: loadedCategories 
           });  
         } catch (err) {
-             //optional send to custom analytics server
+             //optional send to analytics server
              throw err;  
         }    
     };

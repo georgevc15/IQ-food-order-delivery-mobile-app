@@ -26,7 +26,7 @@ const CategoryItem = props => {
           </View>
        
           <View style={styles.actions}>
-                    {props.children}  
+                {props.children} 
            </View>      
         </View>
 

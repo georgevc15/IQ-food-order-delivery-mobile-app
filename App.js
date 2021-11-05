@@ -8,6 +8,7 @@ import { useFonts } from 'expo-font';
 import categoriesReducer from './store/reducers/categories';
 import productsReducer from './store/reducers/products';
 import cartReducer from './store/reducers/cart';
+import DailyMenuInfoReducer from './store/reducers/dailymenuinfo';
 
 import AppNavigator from './navigation/AppNavigator';
 
@@ -15,7 +16,8 @@ import AppNavigator from './navigation/AppNavigator';
 const rootReducer = combineReducers({
   categories: categoriesReducer,
   products: productsReducer,
-  cart: cartReducer
+  cart: cartReducer,
+  dailyMenuInfo: DailyMenuInfoReducer
 });
 
 //const store = createStore(rootReducer, applyMiddleware(ReduxThunk)); //composeWithDevTools()

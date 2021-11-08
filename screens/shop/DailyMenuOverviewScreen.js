@@ -18,18 +18,17 @@ import * as dailyMenuInfoActions from '../../store/actions/dailymenuinfo';
 
 const DailyMenuOverviewScreen = () => {
 
+  const dailyMenuInfo = useSelector(state => state.dailyMenuInfo.availableDailyMenuInfo);
+  const orderStart = dailyMenuInfo.map(x=>x.orderStart); 
+  const orderStop = dailyMenuInfo.map(x=>x.orderStop);
+  console.log(dailyMenuInfo);
 
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-useEffect(() => {
-    dispatch(dailyMenuInfoActions.fetchDailyMenuInfo());
-}, [dispatch]);
+  useEffect(() => {
+      dispatch(dailyMenuInfoActions.fetchDailyMenuInfo());
+  }, [dispatch]);
 
-
-const dailyMenuInfo = useSelector(state => state.dailyMenuInfo.availableDailyMenuInfo);
-
-const orderStart = dailyMenuInfo.map(x=>x.orderStart); 
-const orderStop = dailyMenuInfo.map(x=>x.orderStop);
 
 
   const soupData = [{

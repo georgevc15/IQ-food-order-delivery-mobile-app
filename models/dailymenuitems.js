@@ -1,8 +1,8 @@
 class DailyMenuItems {
-    constructor(id, menu_id, category_id, name, stock) {
+    constructor(id, menuId, categoryId, name, stock) {
         this.id = id;
-        this.menuId = menu_id;
-        this.categoryId = category_id;
+        this.menuId = menuId;
+        this.categoryId = categoryId;
         this.name = name;
         this.stock = stock;
     }

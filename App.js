@@ -9,6 +9,7 @@ import categoriesReducer from './store/reducers/categories';
 import productsReducer from './store/reducers/products';
 import cartReducer from './store/reducers/cart';
 import DailyMenuInfoReducer from './store/reducers/dailymenuinfo';
+import DailyMenuItemsReducer from './store/reducers/dailymenuitems';
 
 import AppNavigator from './navigation/AppNavigator';
 
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
   categories: categoriesReducer,
   products: productsReducer,
   cart: cartReducer,
-  dailyMenuInfo: DailyMenuInfoReducer
+  dailyMenuInfo: DailyMenuInfoReducer,
+  dailyMenuItems: DailyMenuItemsReducer
 });
 
 //const store = createStore(rootReducer, applyMiddleware(ReduxThunk)); //composeWithDevTools()

@@ -8,14 +8,12 @@ export const fetchDailyMenuInfo = () => {
             const response = await fetch(
                 `https://www.alibabafood.ro/api/daily-menu-info.php`
             );
-
-
+            
                 if(!response.ok) {
                     throw new Error('Something went wrong');
                 }
 
-                const resData = await response.json();
-                
+                const resData = await response.json();             
                 const loadedDailyMenuInfo = [];
 
                 for (const key in resData) {

@@ -14,22 +14,21 @@ export const fetchDailyMenuItems = () => {
            }
            
            const resData = await response.json();
-
            const loadedDailyMenuItems = [];
 
            for (const key in resData) {
-               loadedDailMenuItems.push (
-                new DailyMenuItems (
+
+              loadedDailyMenuItems.push(
+                new DailyMenuItems(
                        key,
-                       resData[key].id,
-                       resData[key].menu_id,
+                       resData[key].menu_id,     
                        resData[key].category_id,
                        resData[key].name,
                        resData[key].stock 
                     )
                );
            }
-
+     
             dispatch({
                 type: SHOW_DAILY_MENU_ITEMS,
                 dailyMenuItems: loadedDailyMenuItems

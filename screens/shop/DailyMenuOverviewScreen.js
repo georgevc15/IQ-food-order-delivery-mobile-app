@@ -15,13 +15,14 @@ import Colors from '../../constants/Colors';
 import Card from '../../components/UI/Card';
 
 import * as dailyMenuInfoActions from '../../store/actions/dailymenuinfo';
+import * as dailyMenuItemsActions from '../../store/actions/dailymenuitems';
 
 const DailyMenuOverviewScreen = () => {
 
   const dailyMenuInfo = useSelector(state => state.dailyMenuInfo.availableDailyMenuInfo);
   const orderStart = dailyMenuInfo.map(x=>x.orderStart); 
   const orderStop = dailyMenuInfo.map(x=>x.orderStop);
-  console.log(dailyMenuInfo);
+
 
   const dispatch = useDispatch();
 
@@ -29,9 +30,34 @@ const DailyMenuOverviewScreen = () => {
       dispatch(dailyMenuInfoActions.fetchDailyMenuInfo());
   }, [dispatch]);
 
+const dailyMenuItems = useSelector(state => state.dailyMenuItems.availableDailyMenuItems);
+
+useEffect(() => {
+  dispatch(dailyMenuItemsActions.fetchDailyMenuItems());
+}, [dispatch]);
 
 
-  const soupData = [{
+
+let soupDataItems = {};
+for(var i = 0; i < dailyMenuItems.length; i++) {
+
+  categoryItemId = dailyMenuItems[i]['categoryId'];
+  if(categoryItemId == 1) {
+    soupDataItems = 
+      { 
+        id : dailyMenuItems[i]['id'],
+        label : dailyMenuItems[i]['name'],
+        value : dailyMenuItems[i]['id'],
+        type : 'soup'
+      }
+  }
+}
+
+//console.log(soupDataItems);
+
+
+//const soupData = [soupDataItems];
+const soupData = [{
       id: '1',
       label: 'Option 1',
       value: 'valoare1',
@@ -44,6 +70,7 @@ const DailyMenuOverviewScreen = () => {
       type: 'soup'
     }];
 
+    console.log(soupData);
     const mainCourseData = [{
       id: '3',
       label: 'Option 3',
@@ -98,7 +125,7 @@ const [salads, setSalads] = useState(saladsData);
 
 function onPressChoseSoup(radioButtonsArray) {
     setSoup(radioButtonsArray);
-    console.log(soup);
+    //console.log(soup);
 
         for (var key in soup) {
           if (soup.hasOwnProperty(key)) {

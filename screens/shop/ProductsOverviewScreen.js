@@ -46,6 +46,8 @@ const decreaseQtyHandler = (index, productId) =>  {
     }
 }
 
+//https://youtu.be/DYJVl6vVCEI?t=272
+
   const cars = useSelector(state => state.cart.cars);
   const products = useSelector(state => state.products.availableProducts);
   const quantities = useSelector(state => state.cart.quantities);

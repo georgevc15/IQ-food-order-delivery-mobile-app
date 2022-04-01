@@ -16,13 +16,15 @@ import Card from '../../components/UI/Card';
 
 import * as dailyMenuInfoActions from '../../store/actions/dailymenuinfo';
 import * as dailyMenuItemsActions from '../../store/actions/dailymenuitems';
+import { createIconSetFromFontello } from 'react-native-vector-icons';
 
 const DailyMenuOverviewScreen = () => {
 
+  const [isLoading, setIsLoading] = useState(false);
+  
   const dailyMenuInfo = useSelector(state => state.dailyMenuInfo.availableDailyMenuInfo);
   const orderStart = dailyMenuInfo.map(x=>x.orderStart); 
   const orderStop = dailyMenuInfo.map(x=>x.orderStop);
-
 
   const dispatch = useDispatch();
 
@@ -30,102 +32,100 @@ const DailyMenuOverviewScreen = () => {
       dispatch(dailyMenuInfoActions.fetchDailyMenuInfo());
   }, [dispatch]);
 
-const dailyMenuItems = useSelector(state => state.dailyMenuItems.availableDailyMenuItems);
+
+const dailyMenuItems = useSelector(state => { 
+    return state.dailyMenuItems.availableDailyMenuItems;
+});
+
 
 useEffect(() => {
-  dispatch(dailyMenuItemsActions.fetchDailyMenuItems());
+    dispatch(dailyMenuItemsActions.fetchDailyMenuItems());
+    
 }, [dispatch]);
 
 
 
-let soupDataItems = {};
-for(var i = 0; i < dailyMenuItems.length; i++) {
+let soupDataItems = [];
+let mainDishDataItems = [];
+let secondCourseDataItems = [];
+let saladsDataItems = [];
 
-  categoryItemId = dailyMenuItems[i]['categoryId'];
-  if(categoryItemId == 1) {
-    soupDataItems = 
-      { 
-        id : dailyMenuItems[i]['id'],
-        label : dailyMenuItems[i]['name'],
-        value : dailyMenuItems[i]['id'],
-        type : 'soup'
-      }
+  for(var i = 0; i < dailyMenuItems.length; i++) {
+    categoryItemId = dailyMenuItems[i]['categoryId'];
+    stock = dailyMenuItems[i]['stock'];
+    
+   if(stock > 0) {
+    if(categoryItemId == 1) {
+      soupDataItems.push(  
+        { 
+          id : dailyMenuItems[i]['id'],
+          label : dailyMenuItems[i]['name'],
+          value : dailyMenuItems[i]['name'],
+          type : 'soup'
+        })
+    }
+
+    if(categoryItemId == 2) {
+      mainDishDataItems.push(  
+        { 
+          id : dailyMenuItems[i]['id'],
+          label : dailyMenuItems[i]['name'],
+          value : dailyMenuItems[i]['name'],
+          type : 'mainDish'
+        })
+    }
+
+    if(categoryItemId == 4) {
+      secondCourseDataItems.push(  
+        { 
+          id : dailyMenuItems[i]['id'],
+          label : dailyMenuItems[i]['name'],
+          value : dailyMenuItems[i]['name'],
+          type : 'secondCourse'
+        })
+    }
+
+    if(categoryItemId == 5) {
+      saladsDataItems.push(  
+        { 
+          id : dailyMenuItems[i]['id'],
+          label : dailyMenuItems[i]['name'],
+          value : dailyMenuItems[i]['name'],
+          type : 'salads'
+        })
+    }
   }
+
 }
 
-//console.log(soupDataItems);
+
+console.log(soupDataItems);
+
+const [soup, setSoup] = useState(soupDataItems);
+const [mainCourse, setMainCourse] = useState(mainDishDataItems);
+const [secondCourse, setSecondCourse] = useState(secondCourseDataItems);
+const [salads, setSalads] = useState(saladsDataItems);
 
 
-//const soupData = [soupDataItems];
-const soupData = [{
-      id: '1',
-      label: 'Option 1',
-      value: 'valoare1',
-      type: 'soup'
-    },
-    {
-      id: '2',
-      label: 'Option 2',
-      value: 'valoare2',
-      type: 'soup'
-    }];
+useEffect(() => {
 
-    console.log(soupData);
-    const mainCourseData = [{
-      id: '3',
-      label: 'Option 3',
-      value: 'valoare3',
-      type: 'mainCourse'
-      },
-      {
-       id: '4',
-       label: 'Option 4',
-       value: 'valoare4',
-       type: 'mainCourse'
-      }];
 
-    const secondCourseData = [{
-      id: '5',
-      label: 'Option 5',
-      value: 'valoare 5'
-      },
-      {
-       id: '6',
-       label: 'Option 4',
-       value: 'valoare 4'
-      }];
+}, []);
 
-      const saladsData = [{
-        id: '7',
-        label: 'Option 5',
-        value: 'valoare 5'
-        },
-        {
-        id: '8',
-        label: 'Option 6',
-        value: 'valoare 6'
-        },
-        {
-        id: '9',
-        label: 'Option 9',
-        value: 'valoare 9'
-        },
-        {
-        id: '10',
-        label: 'Option 10',
-        value: 'valoare 10'
-        }
-      ];
-    
 
-const [soup, setSoup] = useState(soupData);
-const [mainCourse, setMainCourse] = useState(mainCourseData);
-const [secondCourse, setSecondCourse] = useState(secondCourseData);
-const [salads, setSalads] = useState(saladsData);
+const loadDailyMenuItems = useCallback(async () => {
+  try {
+ 
+    await dispatch(dailyMenuItemsActions.fetchDailyMenuItems());
+    getDataItems(dailyMenuItems);
+  } catch (err) {
+  }
+
+}, [dispatch, setIsLoading]);
+
 
 function onPressChoseSoup(radioButtonsArray) {
     setSoup(radioButtonsArray);
-    //console.log(soup);
 
         for (var key in soup) {
           if (soup.hasOwnProperty(key)) {
@@ -136,38 +136,58 @@ function onPressChoseSoup(radioButtonsArray) {
         }
     }
 
+    
     function onPressMainCourse(radioButtonsArray) {
       setMainCourse(radioButtonsArray);
-      console.log(mainCourse);
+      //console.log(mainCourse);
   
           for (var key in mainCourse) {
             if (mainCourse.hasOwnProperty(key)) {
-                console.log(key + " -> " + mainCourse[key]['label']);
+                //console.log(key + " -> " + mainCourse[key]['label']);
             }
           }
       }
 
+
       function onPressSecondCourse(radioButtonsArray) {
         setSecondCourse(radioButtonsArray);
-        console.log(secondCourse);
+        //console.log(secondCourse);
     
             for (var key in secondCourse) {
               if (secondCourse.hasOwnProperty(key)) {
-                  console.log(key + " -> " + secondCourse[key]['label']);
+                  //console.log(key + " -> " + secondCourse[key]['label']);
               }
             }
         }
 
         function onPressSalads(radioButtonsArray) {
           setSalads(radioButtonsArray);
-          console.log(salads);
+          //console.log(salads);
       
               for (var key in salads) {
                 if (salads.hasOwnProperty(key)) {
-                    console.log(key + " -> " + salads[key]['label']);
+                   // console.log(key + " -> " + salads[key]['label']);
                 }
               }
           }
+
+
+          useEffect(() => {
+            setIsLoading(true);
+            loadDailyMenuItems().then(() => {
+              setIsLoading(false);
+            });
+          }, [dispatch, loadDailyMenuItems]);
+
+
+
+
+
+         // if (!isLoading && soup.length === 0) {
+
+          // return (<View><Text>Pagina se incarca</Text></View>)
+       // }
+        
 
     return (
        <ScrollView>
@@ -175,34 +195,36 @@ function onPressChoseSoup(radioButtonsArray) {
          <View style={styles.titleWrapper}>
            <Text styles={styles.title}> Meniul zilei se poate comanda zilnic intre orele {orderStart} | {orderStop}  </Text>
            </View>
-        
-        <View style={styles.dailyOptions}>
-          <Text styles={styles.courseTitle}> Ciorbe / Supe</Text>
-  
+
+    <View style={styles.dailyOptions}>
+      
+      <Text style={styles.titleText}>Alege Ciorbe / Supe</Text>
           <RadioGroup
             radioButtons={soup} 
             onPress={onPressChoseSoup} 
         /> 
-         
 
-          <Text style={{ fontSize: 18 }}> Fel principal </Text>
-          <RadioGroup 
+      <Text styles={styles.courseTitle}>Alege Fel principal </Text>
+          <RadioGroup
             radioButtons={mainCourse} 
-            onPress={onPressMainCourse}
-        />
-          <Text> Garnituri </Text>
-          <RadioGroup 
-            radioButtons={secondCourse} 
-            onPress={onPressSecondCourse}
-        />
-          <Text> Salate </Text>
-          <RadioGroup 
-            radioButtons={salads} 
-            onPress={onPressSalads}
-        />
+            onPress={onPressChoseSoup} 
+        />        
 
-        </View> 
-      
+      <Text styles={styles.courseTitle}>Alege: Garnituri</Text>
+          <RadioGroup
+            radioButtons={secondCourse} 
+            onPress={onPressChoseSoup} 
+        />       
+        
+        <Text styles={styles.courseTitle}>Alege: Salate</Text>
+          <RadioGroup
+            radioButtons={salads} 
+            onPress={onPressChoseSoup} 
+        /> 
+
+
+      </View> 
+
         <TouchableOpacity> 
           <View styles={styles.wrapperAddToCart}>
             <Button  styles={styles.addToCart}
@@ -248,7 +270,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   courseTitle: {
-    fontSize: 20,
+    fontSize: 50,
     fontWeight: "bold"
   },
   wrapperAddToCart: {

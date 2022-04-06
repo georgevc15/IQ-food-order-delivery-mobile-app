@@ -11,11 +11,13 @@ export const fetchProducts = categoryId => {
                 `https://www.alibabafood.ro/api/products.php?id=${categoryId}`
             );
 
+
             if (!response.ok) {
                 throw new Error('Something went wrong!');
             }
-
+                      
             const resData = await response.json();
+            //console.log(resData);
 
             const loadedProducts = [];
 
@@ -29,7 +31,8 @@ export const fetchProducts = categoryId => {
                         resData[key].price,
                         resData[key].orderStart,
                         resData[key].orderStop,
-                        resData[key].picturFullLink
+                        resData[key].picturFullLink,
+                        resData[key].hasOption
                     )
                 );
             }

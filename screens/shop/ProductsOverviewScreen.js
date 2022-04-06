@@ -22,7 +22,6 @@ const ProductsOverviewScreen = props => {
    
   const [currentQty, setcurrentQty]= useState([]);
 
-
  const increaseQtyHandler =  (index, productId) => {
       let qty = currentQty[index];
         
@@ -52,7 +51,6 @@ const decreaseQtyHandler = (index, productId) =>  {
   const products = useSelector(state => state.products.availableProducts);
   const quantities = useSelector(state => state.cart.quantities);
   
-
 const dispatch = useDispatch();
 
 const loadProducts = useCallback(async () => {
@@ -135,6 +133,7 @@ const loadProducts = useCallback(async () => {
     }
   
     if (!isLoading && products.length === 0) {
+
       return (<View style={styles.centered}>
           <Text>Nu exista produse</Text>
       </View>)
@@ -152,6 +151,7 @@ const loadProducts = useCallback(async () => {
           id={item.id}
           image={item.picturFullLink}
           name={item.name}
+          hasOption={item.hasOption}
           >
       <View style={styles.titleWrapper}>
             <Text style={styles.title}>{item.name}</Text>

@@ -16,7 +16,7 @@ import Card from '../../components/UI/Card';
 
 import * as dailyMenuInfoActions from '../../store/actions/dailymenuinfo';
 import * as dailyMenuItemsActions from '../../store/actions/dailymenuitems';
-import { createIconSetFromFontello } from 'react-native-vector-icons';
+
 
 const DailyMenuOverviewScreen = () => {
 
@@ -42,7 +42,6 @@ useEffect(() => {
     dispatch(dailyMenuItemsActions.fetchDailyMenuItems());
     
 }, [dispatch]);
-
 
 
 let soupDataItems = [];
@@ -98,19 +97,11 @@ let saladsDataItems = [];
 
 }
 
-
-console.log(soupDataItems);
-
 const [soup, setSoup] = useState(soupDataItems);
 const [mainCourse, setMainCourse] = useState(mainDishDataItems);
 const [secondCourse, setSecondCourse] = useState(secondCourseDataItems);
 const [salads, setSalads] = useState(saladsDataItems);
 
-
-useEffect(() => {
-
-
-}, []);
 
 
 const loadDailyMenuItems = useCallback(async () => {
@@ -130,7 +121,7 @@ function onPressChoseSoup(radioButtonsArray) {
         for (var key in soup) {
           if (soup.hasOwnProperty(key)) {
             if(soup[key]['selected'] == true) {
-              console.log(key + " -> " + soup[key]['label']);
+              //console.log(key + " -> " + soup[key]['label']);
             }
           }
         }
@@ -179,15 +170,18 @@ function onPressChoseSoup(radioButtonsArray) {
             });
           }, [dispatch, loadDailyMenuItems]);
 
+         if (!isLoading && soup.length === 0) {
+
+           return (<View><Text>Pagina se incarca</Text></View>)
+
+           //reRender = () => {     this.forceUpdate(); };
 
 
-
-
-         // if (!isLoading && soup.length === 0) {
-
-          // return (<View><Text>Pagina se incarca</Text></View>)
-       // }
+          //const [, updateState] = useState();
+          //useCallback(() => updateState({}), []);
+        }
         
+        //console.log(soup);
 
     return (
        <ScrollView>
@@ -207,19 +201,19 @@ function onPressChoseSoup(radioButtonsArray) {
       <Text styles={styles.courseTitle}>Alege Fel principal </Text>
           <RadioGroup
             radioButtons={mainCourse} 
-            onPress={onPressChoseSoup} 
+            onPress={onPressMainCourse} 
         />        
 
       <Text styles={styles.courseTitle}>Alege: Garnituri</Text>
           <RadioGroup
             radioButtons={secondCourse} 
-            onPress={onPressChoseSoup} 
+            onPress={onPressSecondCourse} 
         />       
         
         <Text styles={styles.courseTitle}>Alege: Salate</Text>
           <RadioGroup
             radioButtons={salads} 
-            onPress={onPressChoseSoup} 
+            onPress={onPressSalads} 
         /> 
 
 
